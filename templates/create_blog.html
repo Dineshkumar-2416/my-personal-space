@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}{% if mode == "edit" %}Edit{% else %}Create{% endif %} Blog Post - Blog Site{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h1>{% if mode == "edit" %}Edit{% else %}Create New{% endif %} Blog Post</h1>
+
+    <form action="{% if mode == 'edit' %}/api/blog/{{ blog.id }}{% else %}/api/blog{% endif %}" method="post" class="blog-form">
+        <div class="form-group">
+            <label for="title">Title *</label>
+            <input type="text" id="title" name="title" required
+                   value="{% if blog %}{{ blog.title }}{% endif %}"
+                   placeholder="Enter blog post title">
+        </div>
+
+        <div class="form-group">
+            <label for="content">Content (Markdown) *</label>
+            <textarea id="content" name="content" required rows="15"
+                      placeholder="Write your blog post in Markdown...&#10;&#10;Example:&#10;# Heading&#10;**Bold text**&#10;- List item&#10;[Link](https://example.com)">{% if blog %}{{ blog.content }}{% endif %}</textarea>
+            <small class="help-text">You can use Markdown formatting. It will be converted to HTML automatically.</small>
+        </div>
+
+        <div class="form-group">
+            <label for="categories">Categories</label>
+            <input type="text" id="categories" name="categories"
+                   value="{% if blog %}{{ blog.categories | map(attribute='name') | join(', ') }}{% endif %}"
+                   placeholder="e.g., Technology, Tutorial, Review">
+            <small class="help-text">Separate multiple categories with commas</small>
+        </div>
+
+        <div class="form-group">
+            <label for="tags">Tags</label>
+            <input type="text" id="tags" name="tags"
+                   value="{% if blog %}{{ blog.tags | map(attribute='name') | join(', ') }}{% endif %}"
+                   placeholder="e.g., python, fastapi, web-development">
+            <small class="help-text">Separate multiple tags with commas</small>
+        </div>
+
+        <div class="form-group checkbox-group">
+            <label>
+                <input type="checkbox" name="published" value="true"
+                       {% if not blog or blog.published %}checked{% endif %}>
+                Publish immediately
+            </label>
+            <small class="help-text">Uncheck to save as draft</small>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">
+                {% if mode == "edit" %}Update Post{% else %}Create Post{% endif %}
+            </button>
+            <a href="{% if blog %}/blog/{{ blog.id }}{% else %}/{% endif %}" class="btn-secondary">Cancel</a>
+        </div>
+    </form>
+
+    <div class="markdown-guide">
+        <h3>Markdown Quick Reference</h3>
+        <ul>
+            <li><code># Heading 1</code> → <strong>Large heading</strong></li>
+            <li><code>## Heading 2</code> → <strong>Medium heading</strong></li>
+            <li><code>**bold**</code> → <strong>bold</strong></li>
+            <li><code>*italic*</code> → <em>italic</em></li>
+            <li><code>[link](url)</code> → Link</li>
+            <li><code>- item</code> → Bullet list</li>
+            <li><code>`code`</code> → Inline code</li>
+            <li><code>```code block```</code> → Code block</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

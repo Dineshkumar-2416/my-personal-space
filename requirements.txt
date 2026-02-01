@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+markdown
+jinja2
+python-multipart
+aiofiles
+psycopg2-binary
+gunicorn

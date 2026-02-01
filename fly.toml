@@ -1,0 +1,53 @@
+# Fly.io Configuration for FastAPI Blog
+# Learn more: https://fly.io/docs/reference/configuration/
+
+# Your app's unique name (change this to something unique!)
+# This becomes: https://your-app-name.fly.dev
+app = "my-personal-space"
+
+# Primary region (where your app runs)
+# iad = Washington DC (US East)
+# Other options: lax (US West), lhr (London), fra (Frankfurt), syd (Sydney)
+primary_region = "iad"
+
+# Build Configuration
+[build]
+  # Use the Dockerfile in the project root
+  dockerfile = "Dockerfile"
+
+# Environment Variables
+[env]
+  # Port your app listens on (must match Dockerfile CMD)
+  PORT = "8080"
+
+# HTTP Service Configuration
+[http_service]
+  # Port inside the container (matches ENV PORT)
+  internal_port = 8080
+
+  # Force HTTPS (redirect HTTP to HTTPS)
+  force_https = true
+
+  # Keep machines running (no auto-stop)
+  auto_stop_machines = false
+
+  # Auto-start if stopped
+  auto_start_machines = true
+
+  # Minimum machines to keep running
+  min_machines_running = 1
+
+  # HTTP check to verify app is healthy
+  [http_service.concurrency]
+    type = "requests"
+    soft_limit = 200
+    hard_limit = 250
+
+# Persistent Volume for SQLite Database
+# CRITICAL: This makes your blogs.db persist across deployments!
+[mounts]
+  # Volume name (must match: fly volumes create blog_data)
+  source = "blog_data"
+
+  # Mount destination (same as Dockerfile WORKDIR)
+  destination = "/app"

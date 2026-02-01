@@ -1,0 +1,27 @@
+# Render Blueprint - Deployment Configuration
+# This file tells Render how to build and run your app
+
+databases:
+  # Free PostgreSQL database for blog posts
+  - name: blog-db
+    plan: free
+    databaseName: blogdb
+    user: bloguser
+
+services:
+  # Your FastAPI blog web service
+  - type: web
+    name: my-personal-space
+    plan: free
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app.main:app -w 2 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:$PORT
+    envVars:
+      # Connects your app to the PostgreSQL database
+      - key: DATABASE_URL
+        fromDatabase:
+          name: blog-db
+          property: connectionString
+      # Python won't buffer output (better logging)
+      - key: PYTHONUNBUFFERED
+        value: "1"

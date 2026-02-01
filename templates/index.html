@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Blog Site{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>
+        {% if filter_type == "category" %}
+            Category: {{ filter_name }}
+        {% elif filter_type == "tag" %}
+            Tag: {{ filter_name }}
+        {% else %}
+            All Blog Posts
+        {% endif %}
+    </h1>
+    {% if filter_type %}
+        <a href="/" class="btn-secondary">Clear Filter</a>
+    {% endif %}
+</div>
+
+<div class="content-wrapper">
+    <div class="blog-list">
+        {% if blogs %}
+            {% for blog in blogs %}
+            <article class="blog-card">
+                <h2><a href="/blog/{{ blog.id }}">{{ blog.title }}</a></h2>
+                <div class="blog-meta">
+                    <span class="date">{{ blog.created_at.strftime('%B %d, %Y') }}</span>
+                    {% if not blog.published %}
+                        <span class="badge draft">Draft</span>
+                    {% endif %}
+                </div>
+                <div class="blog-excerpt">
+                    {{ blog.content[:200] }}{% if blog.content|length > 200 %}...{% endif %}
+                </div>
+                <div class="blog-tags">
+                    {% for category in blog.categories %}
+                        <a href="/category/{{ category.name }}" class="tag category-tag">{{ category.name }}</a>
+                    {% endfor %}
+                    {% for tag in blog.tags %}
+                        <a href="/tag/{{ tag.name }}" class="tag">{{ tag.name }}</a>
+                    {% endfor %}
+                </div>
+                <a href="/blog/{{ blog.id }}" class="read-more">Read More &rarr;</a>
+            </article>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <p>No blog posts found.</p>
+                <a href="/blog/create" class="btn-primary">Create Your First Post</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <aside class="sidebar">
+        <div class="sidebar-section">
+            <h3>Categories</h3>
+            {% if categories %}
+                <ul class="filter-list">
+                    {% for category in categories %}
+                        <li><a href="/category/{{ category.name }}">{{ category.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="muted">No categories yet</p>
+            {% endif %}
+        </div>
+
+        <div class="sidebar-section">
+            <h3>Tags</h3>
+            {% if tags %}
+                <ul class="filter-list">
+                    {% for tag in tags %}
+                        <li><a href="/tag/{{ tag.name }}">{{ tag.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="muted">No tags yet</p>
+            {% endif %}
+        </div>
+    </aside>
+</div>
+{% endblock %}

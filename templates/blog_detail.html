@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}{{ blog.title }} - Blog Site{% endblock %}
+
+{% block content %}
+<div class="blog-detail">
+    <article>
+        <header class="blog-header">
+            <h1>{{ blog.title }}</h1>
+            <div class="blog-meta">
+                <span class="date">Published: {{ blog.created_at.strftime('%B %d, %Y at %I:%M %p') }}</span>
+                {% if blog.updated_at != blog.created_at %}
+                    <span class="date">Updated: {{ blog.updated_at.strftime('%B %d, %Y at %I:%M %p') }}</span>
+                {% endif %}
+                {% if not blog.published %}
+                    <span class="badge draft">Draft</span>
+                {% endif %}
+            </div>
+            <div class="blog-tags">
+                {% for category in blog.categories %}
+                    <a href="/category/{{ category.name }}" class="tag category-tag">{{ category.name }}</a>
+                {% endfor %}
+                {% for tag in blog.tags %}
+                    <a href="/tag/{{ tag.name }}" class="tag">{{ tag.name }}</a>
+                {% endfor %}
+            </div>
+        </header>
+
+        <div class="blog-content">
+            {{ blog.html_content | safe }}
+        </div>
+
+        <div class="blog-actions">
+            <a href="/blog/edit/{{ blog.id }}" class="btn-secondary">Edit</a>
+            <form action="/api/blog/{{ blog.id }}/delete" method="post" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this blog post?');">
+                <button type="submit" class="btn-danger">Delete</button>
+            </form>
+            <a href="/" class="btn-secondary">Back to Home</a>
+        </div>
+    </article>
+</div>
+{% endblock %}

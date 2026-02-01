@@ -1,0 +1,68 @@
+# Virtual Environment (700+ MB, won't work in container)
+website_v1/
+venv/
+env/
+
+# Python Cache (recreated automatically)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Local Database (use volume database instead)
+blogs.db
+blogs.db-journal
+*.db
+*.db-journal
+
+# Git (not needed to run the app)
+.git/
+.gitignore
+.gitattributes
+
+# Documentation (not needed in production)
+*.md
+*.pdf
+GETTING_STARTED.md
+DEPLOYMENT.md
+Blog_Application_Complete_Documentation.pdf
+Flyio_Deployment_Complete_Guide.pdf
+
+# IDE Settings
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment Variables (use Fly secrets instead)
+.env
+.env.local
+.env.*.local
+
+# OS Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Build Artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Temporary Files
+*.tmp
+*.log
+.cache/
+
+# Scripts (used for local development only)
+create_flyio_documentation.py
+create_pdf.py
+create_detailed_pdf.py
