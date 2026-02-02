@@ -20,8 +20,11 @@ if SQLALCHEMY_DATABASE_URL.startswith("sqlite"):
         SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
     )
 else:
-    # PostgreSQL doesn't need special connect_args
-    engine = create_engine(SQLALCHEMY_DATABASE_URL)
+    # PostgreSQL on Render requires SSL
+    engine = create_engine(
+        SQLALCHEMY_DATABASE_URL,
+        connect_args={"sslmode": "require"}
+    )
 
 # Create SessionLocal class
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
